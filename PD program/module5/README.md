@@ -1,53 +1,35 @@
-# Module 5: Clock Tree Synthesis, Placement, and Routing
+# Module 5 — CTS, placement, and routing evidence
 
-This module covers the final stages of the backend digital design flow: clock tree synthesis, placement refinement, and routing. These steps are critical because they transform a logically correct design into a physically implementable and routable chip layout.
+## Overview
 
-## Objectives
+This module contains screenshots associated with clock-tree synthesis (CTS), placement, and routing. The folder does not contain the design, flow configuration, constraints, generated databases, reports, or logs, so stage completion and signoff cannot be established from the image names.
 
-- Understand the role of clock tree synthesis (CTS)
-- Learn how placement evolves during the backend flow
-- Interpret the routing stage and its output files
-- Understand the importance of signoff checks in physical design
-- Connect the backend flow to the final implementation stage
+## Stage context
 
-## Key Concepts
+- **Placement:** assigns standard cells to physical sites and may be refined to improve timing or routability.
+- **CTS:** inserts and sizes clock cells to distribute clocks to sequential endpoints. Review skew, insertion delay, transition, and clock-related setup/hold effects.
+- **Routing:** connects cell pins using technology routing layers. Review congestion, unrouted nets, design-rule violations, and post-route parasitics.
+- **Signoff:** requires the relevant timing and physical-verification checks for the target flow; a routed GUI view alone is not signoff.
 
-### Clock Tree Synthesis (CTS)
-CTS distributes the clock signal evenly across the chip to reduce skew and improve timing consistency. This is essential in large digital designs where clock delay variations can affect performance and functionality.
+The screenshots are associated with these stages, but quantitative logs and machine-readable reports are absent, so no pass/fail assessment can be made.
 
-### Placement Refinement
-After the initial placement, the design is optimized to improve timing, reduce congestion, and maintain legal cell placement. This step is important before routing begins.
+## Evidence
 
-### Routing
-Routing connects the placed cells according to the netlist. It is one of the most complex and resource-intensive phases of physical design and directly impacts manufacturability and timing closure.
+![Screenshot associated with CTS](./run_cts_5.png)
+*Screenshot associated with clock-tree synthesis.*
 
-## Module Activities
+![Screenshot associated with placement](./Run_placement_5.png)
+*Screenshot associated with placement.*
 
-- Review CTS flow and generated outputs
-- Inspect placement updates after optimization
-- Study routing execution and final backend results
-- Understand how backend stages transition from placement to implementation
+![Screenshot associated with routing](./Run_routing_5.png)
+*Screenshot associated with routing.*
 
-## Representative Outputs
+## Suggested report set for evaluation
 
-![CTS Execution](./run_cts_5.png)
+To supplement screenshots, provide placement legality/congestion results, CTS clock metrics, routing completion and DRC summaries, and post-route setup/hold reports with the constraints and technology corner used. These reports are not currently in this module.
 
-![Placement Execution](./Run_placement_5.png)
+## Physical-design context
 
-![Routing Execution](./Run_routing_5.png)
+CTS builds a clock distribution network to deliver clock signals to sequential cells. Placement and routing establish physical locations and interconnect. Timing and physical verification depend on design constraints and reports at each stage; the screenshots provide visual context, not a verified pass/fail result.
 
-## Typical Workflow
-
-1. Run clock tree synthesis to distribute the clock network
-2. Optimize placement for timing and routability
-3. Perform routing across the design
-4. Validate results and inspect generated reports
-5. Prepare the design for signoff and physical verification
-
-## Learning Outcome
-
-By the end of this module, learners should understand how the design reaches its final physical implementation stage and why the last backend steps are crucial for successful silicon realization.
-
----
-
-This module completes the PD program by demonstrating the final physical design stages needed to turn a digital design into a usable layout.
+[PD program index](../README.md) · [Module 4](../module4/README.md) · [BabySoC post-route evidence](../../PostRoute_STA_VSDBabySOC_OpenRoad/README.md)

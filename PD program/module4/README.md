@@ -1,57 +1,34 @@
-# Module 4: Synthesis and Timing Corner Analysis
+# Module 4 — Synthesis, libraries, and implementation views
 
-This module focuses on converting HDL into a gate-level netlist and understanding how timing varies across process corners. Synthesis is a key step in the ASIC flow and determines whether the digital design can meet timing and functionality requirements.
+## Overview
 
-## Objectives
+This module contains screenshots associated with configuration/constraints, synthesis, library-corner names, placement, and routing tracks. It contains no SDC/TCL files, source design, library files, timing reports, or logs; corner analysis and timing results therefore cannot be independently verified.
 
-- Understand the logic synthesis process
-- Interpret synthesis reports and netlist generation
-- Assess timing across multiple process corners
-- Learn how libraries and process conditions affect design behavior
-- Review corner-specific design behavior in SkyWater 130nm.
+## Concepts
 
-## Key Concepts
+Synthesis maps logic into cells from a target library. Libraries may provide timing/power data for different process, voltage, and temperature conditions. A timing-constraint file such as SDC describes clocks and I/O/path requirements; incomplete constraints can leave paths unconstrained. Track patterns define preferred routing grids/layers in the technology and affect physical implementation.
 
-### Synthesis
-Synthesis translates a high-level RTL description into logic gates based on target library cells. It is the step where the design becomes implementation-aware and is optimized to match constraints and technology.
+Corner labels alone are not enough to interpret timing: the exact libraries, voltage, temperature, parasitic corner, constraints, and analysis mode are needed. The supplied screenshot `sky140_slow_4.png` uses a different technology-number spelling from the `sky130` filenames; it is preserved exactly and is not assumed to be a valid or comparable corner for the same flow.
 
-### Process Corners
-The fabrication process is not identical for every chip. Corner analysis captures best-case and worst-case conditions such as speed, voltage, and temperature variations. This is important because timing performance changes under different conditions.
+## Selected evidence
 
-### Library Variation
-Different library variants such as fast, typical, and slow corners represent these scenarios. They help designers understand how timing margins behave in real silicon conditions.
+![Synthesis-related screenshot](./Synthesis_4.png)
+*Synthesis-related screenshot.*
 
-## Module Activities
+![Screenshot associated with a typical Sky130 library corner](./sky130_typical_4.png)
+*Screenshot associated with a typical Sky130 library corner.*
 
-- Review synthesis flow and outputs
-- Understand timing conditions and library alternatives
-- Inspect corner-specific library results
-- Evaluate the relationship between design constraints and implementation metrics
+![Screenshot associated with a base SDC configuration](./base.sdc_4.png)
+*Screenshot associated with the base timing-constraint file.*
 
-## Representative Outputs
+Other artifacts include [`Configuration_readme_4.png`](./Configuration_readme_4.png), [`sky130_fast_4.png`](./sky130_fast_4.png), [`sky140_slow_4.png`](./sky140_slow_4.png), [`sky_typical_4.png`](./sky_typical_4.png), [`sky130_inv_4.png`](./sky130_inv_4.png), [`placement_4.png`](./placement_4.png), [`Tracks_info_4.png`](./Tracks_info_4.png), and [`tracks_as_grids_4.png`](./tracks_as_grids_4.png). The supplied name `sky140_slow_4.png` is preserved; it is not relabeled as a Sky130 corner.
 
-![Synthesis Overview](./Synthesis_4.png)
+## Corner-analysis review checklist
 
-![Sky130 Fast Corner](./sky130_fast_4.png)
+For a defensible timing comparison, record the library/corner name and revision, process-voltage-temperature conditions, clock definitions and uncertainty, input/output delays, parasitic assumptions, and analysis mode. Compare setup and hold results and inspect unconstrained endpoints. A screenshot of a library name or configuration pane is not itself a timing report.
 
-![Sky130 Typical Corner](./sky130_typical_4.png)
+## Scope and limitations
 
-![Sky140 Slow Corner](./sky140_slow_4.png)
+Process-corner timing analysis requires the exact library corner, voltage/temperature, constraints, and timing reports. The supplied screenshots do not provide enough reproducible evidence to assert timing closure or compare corner results quantitatively.
 
-![Inverter Corner Example](./sky130_inv_4.png)
-
-## Typical Workflow
-
-1. Prepare the RTL design and target constraints
-2. Run synthesis with the selected library
-3. Inspect the generated netlist and synthesis reports
-4. Evaluate timing and logic quality under different corners
-5. Continue to backend optimization and physical design stages
-
-## Learning Outcome
-
-By the end of this module, learners should be able to interpret synthesis outputs and understand why timing analysis across different corners is critical in real ASIC design.
-
----
-
-This module brings the design from logic-level behavior to implementation-aware timing analysis before the final backend stages.
+[PD program index](../README.md) · [Module 3](../module3/README.md) · [Module 5](../module5/README.md)

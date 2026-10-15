@@ -1,192 +1,71 @@
-# DAY 4: Blocking vs Non-Blocking & Advanced Multiplexer Designs
+# Day 4 — Assignment semantics and multiplexer examples
 
 ## Overview
-This day focuses on one of the most critical concepts in RTL design: the difference between blocking and non-blocking assignments. Understanding this distinction is essential for writing correct sequential and combinatorial logic. Additionally, this day covers advanced multiplexer designs and their synthesis implications.
 
-## Learning Objectives
-- Master blocking vs non-blocking assignments
-- Understand why non-blocking is required for sequential logic
-- Learn proper usage patterns for combinatorial vs sequential logic
-- Explore advanced multiplexer implementations
-- Analyze synthesis results and timing behavior
-- Avoid common simulation vs synthesis mismatches
+This folder collects screenshots associated with blocking/non-blocking assignment examples and a ternary-operator multiplexer. The original RTL, testbenches, waveform files, and Yosys logs are not included.
 
-## Files in This Folder
+## Concepts
 
-### `bad_mux_gtk.png`
-- GTKWave simulation of incorrectly designed multiplexer
-- Shows erroneous behavior due to improper blocking assignment usage
-- Demonstrates simulation results when blocking is used in sequential context
+- Blocking assignment (`=`) evaluates and updates in procedural order. It is commonly used in combinational procedural blocks.
+- Non-blocking assignment (`<=`) schedules updates for the end of the current simulation time step. It is the standard style for clocked sequential blocks and models concurrent register updates.
+- Assignment operators do not, by themselves, determine whether hardware is correct. Correct sensitivity, complete assignments, and intended sequential behavior matter; careless ordering can create simulation races or mismatches.
+- A 2:1 MUX is commonly expressed as `assign y = sel ? b : a;`.
 
-### `bad_mux_yosys.png`
-- Yosys synthesis of the bad_mux design
-- Shows hardware interpretation of blocking assignment
-- Illustrates simulation-synthesis mismatch
+### Sequential assignment example
 
-### `blocking_caveat_gtk.png`
-- GTKWave waveform demonstrating blocking assignment pitfall
-- Shows incorrect signal propagation
-- Highlights timing issues from blocking assignments in sequential logic
+With non-blocking assignments, the right-hand sides are evaluated using the pre-edge values and the updates take effect together:
 
-### `blocking_caveat_yosys.png`
-- Synthesis result of blocking caveat example
-- Demonstrates how synthesizer interprets blocking assignments differently
-- Shows the gap between simulation and actual hardware
-
-### `ternary_operator_mux_rtl.png`
-- RTL representation of multiplexer using ternary operator (conditional)
-- Clean and efficient multiplexer implementation
-- Example: `y = (sel) ? input1 : input0`
-
-### `ternary_operator_mux_yoys_rtl.png`
-- Yosys synthesis result of ternary operator-based MUX
-- Shows efficient gate-level implementation
-- Demonstrates optimal hardware generation
-
-## Key Concepts Covered
-
-1. **Blocking Assignment (`=`)**
-   - Executes immediately during simulation
-   - Intended for combinatorial logic
-   - Used in `always @(*)` or `always @(*)` blocks
-   - NOT recommended for sequential logic
-   - Creates race conditions in sequential contexts
-
-2. **Non-Blocking Assignment (`<=`)**
-   - Evaluates RHS before updating LHS
-   - Essential for sequential logic (triggered by clock edge)
-   - Used in `always @(posedge clk)` blocks
-   - Prevents race conditions
-   - Matches actual hardware behavior
-   - Multiple non-blocking assignments in same block update simultaneously
-
-3. **Simulation vs Synthesis Mismatch**
-   - Blocking in sequential context: simulation differs from hardware
-   - Synthesis tools interpret behavior differently
-   - Real hardware doesn't have "simulation semantics"
-   - Proper assignments ensure simulation matches synthesis
-
-4. **Multiplexer Design Patterns**
-   - Using ternary operator (conditional)
-   - Using if-else statements
-   - Using case statements
-   - Behavioral and structural approaches
-   - Parameterized multiplexers
-
-## Commands & Usage
-
-### Viewing Simulation Waveforms:
-```bash
-# Display bad_mux simulation
-gtkwave bad_mux.vcd
-
-# Display blocking caveat example
-gtkwave blocking_caveat.vcd
-```
-
-### Running Simulations:
-```bash
-# Compile and simulate
-iverilog -o mux_sim mux.v tb_mux.v
-vvp mux_sim
-
-# Dump waveform for analysis
-gtkwave dump.vcd
-```
-
-### Synthesis with Yosys:
-```bash
-# Synthesize MUX design
-yosys -p "read_verilog mux.v; synth_ice40 -json mux.json; show"
-
-# Analyze resource usage
-yosys -p "read_verilog mux.v; synth_ice40; stat"
-```
-
-## Design Patterns
-
-**WRONG - Blocking in Sequential Logic:**
 ```verilog
-always @(posedge clk)
-  begin
-    a = b;      // BLOCKING - WRONG FOR SEQUENTIAL!
-    c = a;      // c gets new value of a, not old
-  end
-  // Simulation: c = new a
-  // Hardware: c might be old value (synthesis mismatch)
+always @(posedge clk) begin
+  a <= b;
+  c <= a;
+end
 ```
 
-**CORRECT - Non-Blocking in Sequential Logic:**
-```verilog
-always @(posedge clk)
-  begin
-    a <= b;     // NON-BLOCKING - CORRECT
-    c <= a;     // c gets old value of a
-  end
-  // Simulation: c = old a
-  // Hardware: c = old a (matches!)
-```
+Thus `c` receives the old value of `a` at that edge. This is the usual way to model two cascaded registers. Blocking assignments update immediately in procedural order and can make simulation behavior depend on statement ordering; using them in clocked logic can create unintended simulation behavior and races between processes. The correct diagnosis depends on the complete RTL and testbench, not only on an operator or screenshot.
 
-**CORRECT - Blocking in Combinatorial Logic:**
-```verilog
-always @(*)
-  begin
-    y = (sel) ? a : b;  // BLOCKING - CORRECT FOR COMBINATORIAL
-  end
-```
+### Combinational MUX example
 
-**Better - Use Ternary Operator:**
 ```verilog
-assign y = (sel) ? a : b;  // Most readable
-```
-
-**Multi-bit Multiplexer:**
-```verilog
-always @(*)
-  case(sel)
-    2'b00: y = in0;
-    2'b01: y = in1;
-    2'b10: y = in2;
-    2'b11: y = in3;
-    default: y = 'x;
+always @* begin
+  case (sel)
+    1'b0: y = a;
+    1'b1: y = b;
+    default: y = 1'b0;
   endcase
+end
 ```
 
-## Common Pitfalls & Solutions
+For a two-state 1-bit select, both binary values are listed. The `default` behavior specifies what simulation should do for unknown or otherwise unmatched values; select a default that matches the design's verification and synthesis intent. Alternatively, use the continuous assignment shown above.
 
-| Pitfall | Problem | Solution |
-|---------|---------|----------|
-| Blocking in `@(posedge clk)` | Simulation-synthesis mismatch | Use non-blocking `<=` |
-| Non-blocking in `@(*)` | Unnecessarily complex | Use blocking `=` or `assign` |
-| Mixed assignments | Race conditions | Keep one pattern per block |
-| Uninitialized signals | Undefined behavior | Always assign default values |
-| Missing `default` in case | Undefined states | Always include default clause |
+### Review checklist
 
-## Testing & Verification
+- Use non-blocking assignments for edge-triggered state updates as a consistent RTL style.
+- Use blocking assignments in combinational procedural blocks and assign every output on every path.
+- Avoid multiple procedural drivers for the same variable.
+- Compare simulation with the intended state transition/Boolean equations. A matching-looking synthesis diagram alone does not prove functional equivalence.
 
-### Testbench Considerations:
-```verilog
-// Test all select lines
-initial
-  for (sel = 0; sel < 4; sel = sel + 1)
-    begin
-      #10 $display("Select=%b, Output=%b", sel, output);
-    end
+## Evidence
 
-// Verify correctness
-assert (output == expected)
-  else $error("Mismatch at time %t", $time);
-```
+| Artifact | Evidence represented by the filename/context |
+| --- | --- |
+| [`bad_mux_gtk.png`](./bad_mux_gtk.png) and [`bad_mux_yosys.png`](./bad_mux_yosys.png) | Screenshots associated with the “bad MUX” example. |
+| [`blocking_caveat_gtk.png`](./blocking_caveat_gtk.png) and [`blocking_caveat_yosys.png`](./blocking_caveat_yosys.png) | Waveform and synthesis screenshots associated with a blocking-assignment caveat. |
+| [`ternary_operator_mux_rtl.png`](./ternary_operator_mux_rtl.png) | MUX RTL view. |
+| [`ternary_operator_mux_yoys_rtl.png`](./ternary_operator_mux_yoys_rtl.png) | Synthesis-related MUX screenshot; the supplied filename spelling is preserved. |
 
-## Best Practices
-- ✓ Always use non-blocking in sequential blocks
-- ✓ Always use blocking in combinatorial blocks
-- ✓ Use `assign` for simple combinatorial expressions
-- ✓ Use ternary operator for 2-to-1 multiplexers
-- ✓ Use case statements for larger multiplexers
-- ✓ Add default cases to prevent latches
-- ✓ Verify waveforms match expectations
-- ✓ Compare simulation and synthesis results
+![GTKWave screenshot associated with the blocking-assignment caveat](./blocking_caveat_gtk.png)
+*GTKWave screenshot associated with the blocking-assignment caveat.*
 
-## Next Steps
-Proceed to DAY_5 to explore case statements, completeness, and advanced control flow designs.
+![MUX RTL screenshot associated with the ternary operator](./ternary_operator_mux_rtl.png)
+*RTL-view screenshot associated with a ternary-operator MUX.*
+
+## Tools and reproduction
+
+GTKWave and Yosys are referenced by the images. The source and exact run commands are absent; screenshots alone do not establish a simulation/synthesis mismatch or its cause.
+
+## Learning outcome
+
+Choose procedural assignment semantics according to the intended combinational or sequential behavior, then validate with a testbench and inspect synthesis output.
+
+[Workshop index](../README.md) · [Day 3](../DAY_3/README.md) · [Day 5](../DAY_5/README.md)

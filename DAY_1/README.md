@@ -1,74 +1,64 @@
-# DAY 1: MUX (Multiplexer) Design Fundamentals
+# Day 1 — Multiplexer fundamentals
 
 ## Overview
-This day covers the fundamental concepts and design patterns related to Multiplexer (MUX) implementation in RTL (Register Transfer Level) design.
 
-## Learning Objectives
-- Understand the basic structure of a multiplexer
-- Learn how to implement 2x1 MUX designs
-- Explore different design approaches and synthesis results
-- Analyze the gate-level implementation of MUX circuits
+This folder documents introductory RTL work on a 2:1 multiplexer. The repository contains two waveform screenshots; it does not contain the RTL, testbench, VCD file, or tool log used to produce them.
 
-## Files in This Folder
+## Concepts
 
-### `good_mux_both.png`
-- Depicts the waveform simulation result of a well-designed 2x1 multiplexer
-- Shows both input signals and the selected output
-- Demonstrates correct timing and signal propagation
+A 2:1 multiplexer selects one of two data inputs using a select signal:
 
-### `good_mux_gtk.png`
-- GTKWave (GTK Waveform Viewer) representation of the MUX simulation
-- Visual waveform display showing the select line toggling between two inputs
-- Useful for understanding the behavioral simulation output
-
-## Key Concepts Covered
-
-1. **Multiplexer Basics**
-   - A 2x1 MUX selects one of two inputs based on a select signal
-   - Output equation: Y = (S' & I0) | (S & I1)
-
-2. **RTL Design Patterns**
-   - Conditional (ternary) operator implementation
-   - If-else statement implementation
-   - Case statement implementation
-
-3. **Simulation Analysis**
-   - Verifying correct behavior with testbenches
-   - Waveform analysis using GTKWave
-
-4. **Synthesis Considerations**
-   - How the RTL code maps to hardware
-   - Optimization during synthesis
-
-## Commands & Usage
-
-### To view waveforms:
-```bash
-# Open GTKWave to visualize simulation results
-gtkwave good_mux_both.vcd
+```text
+y = (~sel & a) | (sel & b)
 ```
 
-### To run simulation:
-```bash
-# Using Icarus Verilog
-iverilog -o output mux.v tb_mux.v
-vvp output
+Equivalent RTL can use a conditional expression, an `if` statement, or a `case` statement. All branches must define the output for combinational logic.
+
+### Truth table
+
+| `sel` | `y` |
+| --- | --- |
+| 0 | `a` |
+| 1 | `b` |
+
+For a one-bit MUX, the equation and a concise synthesizable RTL form are:
+
+```verilog
+assign y = sel ? b : a;
 ```
 
-### To perform synthesis:
-```bash
-# Using Yosys
-yosys -m ghdl
-read_verilog mux.v
-synth_ice40
-write_netlist -json output.json
-```
+The select value chooses the data input; the MUX does not store state. For a multi-bit datapath, `a`, `b`, and `y` can be vectors of matching width while `sel` remains one bit.
 
-## Design Principles
-- Keep designs simple and readable
-- Use consistent naming conventions
-- Always verify with testbenches
-- Analyze synthesis results for optimization opportunities
+### What to verify
 
-## Next Steps
-After mastering MUX design, move to DAY_2 for asynchronous design patterns and sequential logic.
+- Exercise both select values with both possible values on each data input. That gives eight input combinations for a 1-bit 2:1 MUX.
+- Check that a change on the unselected input does not affect `y`.
+- Check that a change on the selected input is reflected at `y` after the combinational simulation update.
+- In a synthesis view, look for selection logic rather than a clocked storage element. Exact gate mapping depends on the synthesis target and constraints.
+
+## Evidence
+
+| Artifact | What it shows |
+| --- | --- |
+| [`good_mux_both.png`](./good_mux_both.png) | Screenshot associated with the MUX example; the original image is retained as supplied. |
+| [`good_mux_gtk.png`](./good_mux_gtk.png) | GTKWave screenshot associated with the MUX example. |
+
+The screenshots are illustrative evidence, not a substitute for the missing source and reproducible simulation inputs.
+
+![GTKWave screenshot associated with the 2:1 MUX example](./good_mux_gtk.png)
+*Figure 1. GTKWave view associated with the 2:1 MUX exercise.*
+
+![Waveform screenshot associated with the MUX example](./good_mux_both.png)
+*Figure 2. Waveform evidence retained from the MUX exercise.*
+
+## Tools and reproduction
+
+The existing notes refer to Icarus Verilog, GTKWave, and Yosys. No source files or exact commands are included in this folder, so the original run cannot be reproduced from this repository alone. For a new design, a typical sequence is to compile the actual RTL and testbench with Icarus Verilog, run the resulting simulation, inspect the generated VCD with GTKWave, and then synthesize the same RTL with the intended target in Yosys. Replace all filenames and top-module names with the ones in the design being evaluated; do not assume files named `mux.v` or `tb_mux.v` exist here.
+
+When presenting results, include the RTL, testbench, tool versions, commands, and waveform/netlist outputs alongside screenshots. This makes the MUX behavior independently reviewable.
+
+## Learning outcome
+
+Understand selection logic, relate a select transition to the chosen data input, and verify a combinational implementation with a testbench and waveform.
+
+[Workshop index](../README.md) · [Day 2](../DAY_2/README.md)

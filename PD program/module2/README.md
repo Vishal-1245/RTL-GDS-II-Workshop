@@ -1,57 +1,38 @@
-# Module 2: Floorplanning and Placement
+# Module 2 — Floorplan and placement evidence
 
-This module focuses on one of the most important stages of physical design: floorplanning. A good floorplan determines how the chip area is organized and how efficiently design blocks can be placed and routed.
+## Overview
 
-## Objectives
+This module contains screenshots associated with floorplanning, I/O placement, layout, and placement. No floorplan constraints, TCL, DEF/ODB, logs, or generated reports are included.
 
-- Understand the concept of floorplanning
-- Learn how to allocate chip area and define regions
-- Inspect floorplan results and placement information
-- Interpret layout and planner outputs
-- Prepare for later stages like CTS and routing
+## Concepts and workflow
 
-## Key Concepts
+Floorplanning sets the physical region and establishes macro/I/O constraints. I/O placement assigns ports to boundary locations according to interface and pin constraints. Placement maps standard cells to legal sites while accounting for connectivity, timing, and congestion. These choices affect later routing and timing; images without constraints/reports cannot quantify those effects.
 
-### Floorplan
-The floorplan defines the core area, I/O boundaries, and general organization of the chip. It is one of the first backend decisions that influences timing, congestion, and routability.
+The screenshot names indicate that floorplan Tcl/configuration and an I/O placer log were viewed, followed by floorplan/layout/placement views. The actual Tcl and log text are not present, so coordinates, utilization targets, pin assignments, and completion status are unknown.
 
-### Placement
-After floorplanning, cells are placed in the defined area to meet logical connectivity while maintaining performance and manufacturability. Placement quality affects both routing and timing.
+## Selected evidence
 
-### Layout Visual Interpretation
-The images in this module help understand how the placed design appears physically and how floorplan constraints are reflected in the final floorplan visualization.
+![Floorplan screenshot](./floorplan.png)
+*Floorplan view.*
 
-## Module Activities
+![Floorplan results screenshot](./floorplan_results_def.png)
+*Floorplan results view.*
 
-- Defining chip floorplan constraints
-- Reviewing floorplan reports and geometry
-- Observing placement at different stages
-- Understanding the relation between logical connectivity and physical arrangement
+![Placement screenshot](./placement.png)
+*Placement view.*
 
-## Representative Outputs
+Other supplied views include [`floorplan_tcl.png`](./floorplan_tcl.png), [`ioplacer_log.png`](./ioplacer_log.png), [`layout.png`](./layout.png), and [`layout_zoomed.png`](./layout_zoomed.png). Their names identify the associated subject, but the screenshot alone does not establish floorplan constraints, legality, congestion, or completion status.
 
-![Floorplan View](./floorplan.png)
+## Physical-design review checklist
 
-![Floorplan Result](./floorplan_results_def.png)
+- Check core/die boundaries, aspect ratio, and macro locations against the intended floorplan.
+- Check pin locations and spacing against interface constraints.
+- Review placement legality and utilization when reports are available.
+- Inspect congestion and routing access, especially around macros and dense regions.
+- Confirm which stage a view represents; a floorplan image is not a routed result.
 
-![Placement Overview](./placement.png)
+## Workflow context
 
-![Layout View](./layout.png)
+Floorplanning defines the region and physical constraints used by later placement and routing. Placement assigns cells to legal locations within that region. The folder shows screenshots related to these activities but does not include sufficient inputs or logs to reconstruct a design-specific workflow.
 
-![Layout Zoomed View](./layout_zoomed.png)
-
-## Typical Workflow
-
-1. Set up the floorplan configuration
-2. Define core and I/O region boundaries
-3. Run placement and review the resulting distribution
-4. Check for congestion, spacing, and area efficiency
-5. Continue to CTS and routing stages
-
-## Learning Outcome
-
-By the end of this module, learners should understand how floorplanning and placement shape the physical structure of a chip and influence design quality.
-
----
-
-This module bridges synthesis and routing by establishing the physical layout foundation for the design.
+[PD program index](../README.md) · [Module 1](../module1/README.md) · [Module 3](../module3/README.md)

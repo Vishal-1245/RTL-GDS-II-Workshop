@@ -1,57 +1,37 @@
-# Module 3: CMOS Design and Simulation with ngspice
+# Module 3 — CMOS inverter and ngspice-related evidence
 
-This module introduces circuit-level design and simulation, focusing on the CMOS inverter and the use of ngspice for waveform analysis. It helps connect transistor behavior with digital logic concepts used in the higher-level ASIC flow.
+## Overview
 
-## Objectives
+This module contains screenshots associated with a SkyWater CMOS inverter, SPICE-related views, ngspice output, and Magic/layout activity. No transistor-level netlist, SPICE deck, model files, command log, or numerical measurement report is included.
 
-- Understand CMOS inverter operation
-- Learn transistor-level simulation using ngspice
-- Interpret waveform results
-- Connect circuit behavior to digital switching concepts
-- Explore the SkyWater 130nm technology stack at transistor level
+## CMOS and simulation context
 
-## Key Concepts
+A CMOS inverter pairs a PMOS pull-up device with an NMOS pull-down device. For a valid supply and suitable input levels, the output logically inverts the input; switching behavior depends on device models, load, parasitics, and input slew. Transient SPICE analysis can show voltages over time, while a layout viewer shows geometry/layers. The screenshots do not provide enough information to derive delay, rise/fall time, power, or design-rule status.
 
-### CMOS Inverter
-A CMOS inverter is one of the most fundamental digital building blocks. It demonstrates how complementary PMOS and NMOS devices together create a logic inversion with low static power and high noise margins.
+An auditable circuit-level experiment should identify device models/PDK corner, supply, input pulse, output load, transient-analysis settings, and measurement definitions for any reported value. Those details and the source deck are absent here.
 
-### ngspice Simulation
-ngspice is used to perform transient analysis and observe how the inverter responds to input transitions. The resulting waveforms provide evidence of switching behavior, delays, and rise/fall characteristics.
+## Selected evidence
 
-### SPICE-based Design Validation
-Circuit-level design validation is essential before a design is relied on in larger RTL and physical implementation workflows. This module provides that beginner-level practical exposure.
+![CMOS inverter screenshot associated with SkyWater 130 nm](./Inverter_sky130A_3.png)
+*Inverter screenshot associated with the SkyWater 130 nm technology.*
 
-## Module Activities
+![Inverter-related circuit or simulation view](./Cmosinverter_tcon_3.png)
+*Circuit or simulation view associated with the inverter example.*
 
-- Create and inspect CMOS inverter schematics
-- Run SPICE simulations using ngspice
-- Observe output response for switching events
-- Analyze waveform plots and understand transistor behavior
+![ngspice output screenshot](./ngspice_1_output_3.png)
+*ngspice output screenshot.*
 
-## Representative Outputs
+![ngspice simulation output view](./ngspice_simulation_op.png)
+*ngspice simulation output view.*
 
-![CMOS Inverter in Sky130A](./Inverter_sky130A_3.png)
+Other images include [`Inverter_spiceext_3.png`](./Inverter_spiceext_3.png), [`Cloning_sky130a_3.png`](./Cloning_sky130a_3.png), [`Magic_git_3.png`](./Magic_git_3.png), [`magic_met3_3.png`](./magic_met3_3.png), [`Floorplan_changing_variables.png`](./Floorplan_changing_variables.png), and [`Floorplan_tcl_mode_check.png`](./Floorplan_tcl_mode_check.png). The file [`openlane_1png`](./openlane_1png) is also present, but has no image extension; it is not embedded here.
 
-![Inverter Schematic/Simulation View](./Cmosinverter_tcon_3.png)
+## Suggested interpretation
 
-![ngspice Simulation Output](./ngspice_1_output_3.png)
+Use circuit/simulation screenshots to identify the inverter setup and displayed response, then compare them with the corresponding SPICE deck and model. Use a Magic/layout view to distinguish visual geometry from an electrically extracted netlist. A layout screenshot alone does not show whether extraction, DRC, LVS, or parasitic-aware simulation was performed.
 
-![Waveform Analysis](./ngspice_simulation_op.png)
+## Scope and limitations
 
-![Magic Layout View](./magic_met3_3.png)
+The images indicate exposure to circuit-level simulation and layout tools. They do not provide enough information to confirm model provenance, supply and load conditions, transient-analysis settings, measured delays, or successful physical verification.
 
-## Typical Workflow
-
-1. Build or inspect the inverter circuit
-2. Set up the SPICE simulation file
-3. Run transient analysis using ngspice
-4. Analyze voltage transitions and timing behavior
-5. Cross-check the result with visual layout or schematic views
-
-## Learning Outcome
-
-By the end of this module, learners should be able to understand the physical principles behind the logic gates they later synthesize and place in ASIC design workflows.
-
----
-
-This module anchors the ASIC flow in realistic semiconductor behavior and prepares learners for deeper backend design work.
+[PD program index](../README.md) · [Module 2](../module2/README.md) · [Module 4](../module4/README.md)

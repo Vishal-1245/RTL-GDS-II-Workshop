@@ -1,170 +1,70 @@
-# DAY 3: DFF with Constants & Logic Optimization
+# Day 3 — Constant logic and synthesis optimization
 
 ## Overview
-This day covers advanced D Flip-Flop designs with constant values and explores logic optimization techniques during synthesis. Focus is on understanding how synthesis tools optimize designs and the importance of writing synthesizable RTL code.
 
-## Learning Objectives
-- Understand DFF behavior with constant inputs
-- Learn constant propagation in synthesis
-- Master logic optimization techniques
-- Analyze synthesis results for efficiency
-- Understand when optimizations are applied
+This folder contains screenshots associated with constant-input DFF examples, a counter, and Yosys optimization. It does not contain the RTL, testbench, Yosys scripts, or textual reports behind the images.
 
-## Files in This Folder
+## Concepts
 
-### `deff_const2_gtk.png`
-- GTKWave simulation showing DFF with constant input
-- Demonstrates how flip-flop behaves when input is tied to a constant value
-- Shows predictable output transitions
+Synthesis can propagate constants, simplify Boolean expressions, and remove logic that has no effect on observable outputs. A register with a constant data input may simplify depending on its reset, enables, and use in the design. The actual transformation must be checked in the synthesized netlist and report; it cannot be inferred fully from an image filename.
 
-### `deff_const2_yosys.png`
-- Yosys synthesis result for DFF with constant input
-- Shows gate-level implementation of constant propagation
-- Illustrates optimization of constant logic paths
+Counters are sequential arithmetic structures. Their width, reset, enable, and overflow behavior should be explicit in the RTL and testbench.
 
-### `deff_const3_gtk.png`
-- Another GTKWave example of DFF with different constant configuration
-- More complex constant value scenarios
-- Demonstrates multiple constant inputs
+### Why a constant input does not always remove a register
 
-### `dff_const3_yosys.png`
-- Yosys synthesis for the const3 variant
-- Shows how multiple constants are handled in hardware
-- Demonstrates constant folding optimization
+If a DFF's data input is tied to a constant, the output may still depend on its reset, initialization assumptions, enable, or observable timing. Optimization is contextual: inspect the resulting netlist and statistics to determine whether the register remains, simplifies, or disappears. A waveform showing a constant value alone does not prove which hardware was inferred.
 
-### `dff_const_gtk.png`
-- Basic GTKWave waveform of simple DFF with constant
-- Fundamental example of constant input behavior
-- Foundation for understanding constant propagation
+### Optimization review workflow
 
-### `dff_const_yosys.png`
-- Yosys synthesis of basic constant DFF
-- Shows fundamental gate-level representation
-- Reference for comparing optimization results
+For a reproducible comparison, use the same top module and inputs before and after optimization, then record:
 
-### `good_counter.png`
-- Binary counter design using DFFs
-- Shows proper counter implementation with increments
-- Demonstrates correct state machine behavior
+1. The initial cell/statistics report.
+2. The optimization passes and target technology, if any.
+3. The resulting netlist and final cell/statistics report.
+4. A functional check using the same testbench or an equivalence check.
 
-### `opt_check.png`
-- Optimization check example 1
-- Compares before and after optimization
-- Shows synthesis efficiency improvements
+Generic Yosys command patterns (replace the example filenames and top name) are:
 
-### `opt_check2.png`
-- Optimization check example 2
-- Another comparison of optimized vs non-optimized design
-- Highlights redundancy elimination
-
-### `opt_check3.png`
-- Optimization check example 3
-- Complex optimization scenario
-- Demonstrates advanced synthesis optimizations
-
-## Key Concepts Covered
-
-1. **Constant Propagation**
-   - When inputs are tied to constant values (0 or 1)
-   - Simplification of logic equations
-   - Elimination of unnecessary gates
-   - Impact on circuit size and power consumption
-
-2. **Logic Optimization Techniques**
-   - Redundancy elimination
-   - Dead code removal
-   - Common subexpression elimination
-   - Boolean algebra simplification
-   - Karnaugh map minimization
-
-3. **Synthesis Tool Optimizations**
-   - How Yosys identifies optimization opportunities
-   - Optimization levels and their effects
-   - Trade-offs between area, power, and speed
-   - Custom optimization passes
-
-4. **DFF Applications**
-   - Counters and accumulators
-   - State machines
-   - Data pipelines
-   - Registers and storage elements
-
-## Commands & Usage
-
-### Viewing Simulation Results:
-```bash
-# Display GTKWave for constant DFF
-gtkwave dff_const.vcd
+```text
+read_verilog design.v
+hierarchy -top top
+proc
+opt
+check
+stat
 ```
 
-### Running Synthesis with Yosys:
-```bash
-# Standard synthesis
-yosys -p "read_verilog dff_const.v; synth_ice40 -json netlist.json"
+The commands are guidance only; this repository does not include the design source or a saved Yosys script. A technology-mapped synthesis flow may use different passes and libraries, so generic cell counts are not directly comparable to mapped area or timing.
 
-# With optimization enabled
-yosys -p "read_verilog dff_const.v; opt; synth_ice40 -json netlist.json"
+### Counter considerations
 
-# Multi-pass optimization
-yosys -p "read_verilog dff_const.v; opt -full; synth_ice40 -json netlist.json"
-```
+An `N`-bit unsigned counter naturally wraps modulo `2^N` when its value exceeds the representable range. Whether it starts from zero, clears synchronously/asynchronously, increments every cycle, or holds under an enable is design-specific. Check those details against the implementation rather than inferring them from the counter screenshot.
 
-### Analyzing Netlist:
-```bash
-# View detailed netlist
-yosys -p "read_verilog design.v; synth_ice40; show"
+## Evidence
 
-# Generate statistics
-yosys -p "read_verilog design.v; synth_ice40; stat"
-```
+| Artifact | What the filename associates it with |
+| --- | --- |
+| [`dff_const_gtk.png`](./dff_const_gtk.png) and [`dff_const_yosys.png`](./dff_const_yosys.png) | Basic constant-DFF waveform and synthesis views. |
+| [`deff_const2_gtk.png`](./deff_const2_gtk.png) and [`deff_const2_yosys.png`](./deff_const2_yosys.png) | Second constant-DFF example. |
+| [`deff_const3_gtk.png`](./deff_const3_gtk.png) and [`dff_const3_yosys.png`](./dff_const3_yosys.png) | Third constant-DFF example. |
+| [`good_counter.png`](./good_counter.png) | Counter example screenshot. |
+| [`opt_check.png`](./opt_check.png), [`opt_check2.png`](./opt_check2.png), [`opt_check3.png`](./opt_check3.png) | Screenshots associated with optimization checks. |
 
-### Counter Implementation:
-```bash
-# Simulate counter behavior
-iverilog -o counter_sim counter.v tb_counter.v
-vvp counter_sim
-gtkwave dump.vcd
-```
+![GTKWave screenshot associated with a constant-input DFF](./dff_const_gtk.png)
+*GTKWave screenshot associated with a constant-input DFF.*
 
-## Design Patterns
+![Screenshot associated with Yosys synthesis of the constant-input DFF](./dff_const_yosys.png)
+*Synthesis screenshot associated with the constant-input DFF.*
 
-**DFF with Constant Input:**
-```verilog
-always @(posedge clk or negedge reset_n)
-  if (~reset_n)
-    q <= 1'b0;
-  else
-    q <= 1'b1;  // Always 1, can be optimized
-```
+![Counter example screenshot](./good_counter.png)
+*Counter example screenshot.*
 
-**Counter Design:**
-```verilog
-always @(posedge clk)
-  counter <= counter + 1;  // Auto-incrementing counter
-```
+## Tools and reproduction
 
-**Optimization-Friendly Logic:**
-```verilog
-// Good: synthesizer can easily optimize
-assign y = (a & b) | (a & c);  // a is common factor
+The images refer to GTKWave and Yosys. Source files, VCDs, exact synthesis commands, and machine-readable reports are not present, so these examples cannot be independently rerun or quantitatively compared from this repository.
 
-// Less efficient: redundant logic
-assign y = (a & b) | (a & c) | (b & c);  // Extra term
-```
+## Learning outcome
 
-## Performance Metrics
-- **Area**: Number of gates in synthesized design
-- **Power**: Dynamic and static power consumption
-- **Delay**: Critical path delay (maximum frequency)
-- **Timing**: Setup/hold time for flip-flops
+Use synthesis reports and netlist comparisons—not RTL appearance alone—to understand constant propagation and logic optimization.
 
-## Optimization Checklist
-- ✓ Remove redundant logic statements
-- ✓ Eliminate dead code paths
-- ✓ Use constant propagation effectively
-- ✓ Leverage Boolean algebra simplifications
-- ✓ Verify functionality after optimization
-- ✓ Profile synthesis results before and after
-
-## Next Steps
-Move to DAY_4 to explore blocking/non-blocking assignments and advanced mux designs.
+[Workshop index](../README.md) · [Day 2](../DAY_2/README.md) · [Day 4](../DAY_4/README.md)

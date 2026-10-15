@@ -1,406 +1,215 @@
-# RTL Design Workshop - Complete Guide
+# RTL Design Workshop and VSD BabySoC Evidence
 
-## 🎓 Overview
-This comprehensive RTL (Register Transfer Level) Design Workshop covers fundamental to advanced concepts in digital hardware design using Verilog. The workshop is structured as a 5-day progression, each building upon the previous day's knowledge, culminating in a complete understanding of modern RTL design practices.
+This repository collects visual evidence from RTL-design workshop exercises and a BabySoC physical-design flow. It is organized as day-wise workshop folders, a five-module physical-design program, and separate BabySoC simulation and OpenROAD post-route artifacts.
 
-This workshop is ideal for:
-- Students learning digital design and HDL
-- Engineers transitioning into RTL design
-- Professionals seeking to refresh their fundamentals
-- Anyone interested in FPGA and ASIC design
+> **Evidence scope:** The checked-in technical artifacts are PNG screenshots and one post-route STA PDF. No RTL/SystemVerilog/VHDL sources, testbenches, simulation dump files, flow scripts, configuration files, or raw tool logs are present. The screenshots and report can be inspected, but the original runs cannot be reproduced from this repository alone. Descriptions below avoid treating a screenshot as proof of a full signoff or verified pass.
 
-## 📚 Workshop Structure
+## Contents
 
-The workshop is organized into five progressive days, each focusing on specific RTL design concepts:
+- [Workshop overview](#workshop-overview)
+- [Day-by-day materials](#day-by-day-materials)
+- [Physical-design program](#physical-design-program)
+- [BabySoC simulation evidence](#babysoc-simulation-evidence)
+- [BabySoC physical-design evidence](#babysoc-physical-design-evidence)
+- [RTL review and reproducibility](#rtl-review-and-reproducibility)
+- [Selected evidence](#selected-evidence)
+- [Learning summary](#learning-summary)
+- [References and acknowledgement](#references-and-acknowledgement)
 
-### [DAY 1: MUX (Multiplexer) Design Fundamentals](./DAY_1/README.md)
-**Focus:** Combinatorial logic basics and multiplexer design patterns
+## Workshop overview
 
-**Key Topics:**
-- Multiplexer fundamentals and 2x1 MUX design
-- RTL design patterns (conditional, if-else, case statements)
-- Simulation using Icarus Verilog and GTKWave
-- Basic synthesis with Yosys
-- Waveform analysis and verification
+The day folders document topics ranging from combinational MUX logic and sequential logic to assignment semantics, completeness, and a sequence-detector exercise. The directory names and screenshot labels provide the available evidence for the activities. They do not include source code or executable examples.
 
-**Files:** `good_mux_both.png`, `good_mux_gtk.png`
+The physical-design materials are divided between the [`PD program`](./PD%20program/README.md), which contains five topic modules represented by screenshots, and a separate [BabySoC OpenROAD post-route folder](./PostRoute_STA_VSDBabySOC_OpenRoad/README.md).
 
-**Skills Gained:**
-- Understanding combinatorial logic
-- Writing testbenches
-- Analyzing simulation waveforms
-- Basic synthesis and gate-level review
+### Learning objectives represented
 
----
+- Relate RTL concepts such as selection logic, registers, and combinational completeness to waveforms and synthesis views.
+- Read simulation and synthesis screenshots as evidence, while recognizing their limits without source, testbench, or logs.
+- Identify the major physical-design stages shown in the repository: floorplanning, placement, CTS, routing, and timing analysis.
+- Use clear, reproducible project documentation and link implementation claims to available artifacts.
 
-### [DAY 2: Sequential Logic & Asynchronous Design](./DAY_2/README.md)
-**Focus:** Sequential logic, flip-flops, and hierarchical design
+### Workshop progression
 
-**Key Topics:**
-- D Flip-Flop (DFF) design and behavior
-- Asynchronous vs synchronous reset mechanisms
-- Metastability and race conditions
-- Hierarchical module design and instantiation
-- Netlist flattening vs hierarchy preservation
+| Stage | Main ideas represented | Review question |
+| --- | --- | --- |
+| DAY_1 | Combinational logic and 2:1 MUX selection | Does the output follow the selected input? |
+| DAY_2 | DFFs, reset behavior, and module hierarchy | When does state update, and how does reset act? |
+| DAY_3 | Constant propagation and synthesis optimization | What logic remains after optimization? |
+| DAY_4 | Blocking/non-blocking semantics and MUX RTL | Do simulation scheduling and intended state behavior agree? |
+| DAY_5 | Complete assignments, latch inference, and generate logic | Are outputs assigned on every combinational path? |
+| DAY_6 | BabySoC pre-/post-synthesis waveform views | Are the same signals and stimulus available for comparison? |
+| DAY_7 | Sequence-detector logic, waveforms, and synthesis statistics | Do behavior and implementation match the design specification? |
 
-**Files:** `asynchronous.png`, `dff_asy_gtk.png`, `dff_syncres.png`, `flatten_netlist.png`, `multiple_modules.png`, `sub_module1.png`
+### Tools named in the material
 
-**Skills Gained:**
-- Designing reliable sequential circuits
-- Understanding clock-domain issues
-- Creating reusable, hierarchical components
-- Making trade-offs between hierarchy and optimization
+The existing workshop notes refer to Icarus Verilog, GTKWave, and Yosys. Physical-design material and screenshots name or show OpenLane, OpenROAD, SkyWater `sky130A`, Magic, and ngspice. Tool versions, exact run commands, environment setup instructions, and PDK/library revisions are not recorded here.
 
----
+## How to use this repository
 
-### [DAY 3: DFF with Constants & Logic Optimization](./DAY_3/README.md)
-**Focus:** Advanced DFF designs and synthesis optimization techniques
+1. Start with the relevant day or module guide.
+2. Read its concept summary before interpreting an image; a screenshot is a view of a result, not a complete record of design inputs.
+3. Use the evidence tables in each guide to find screenshots and understand what each one is associated with.
+4. Treat RTL examples and command patterns in guides as educational guidance, not a claim that their source files exist in this repository.
+5. For reproducibility, provide the design/testbench or flow inputs, tool versions, exact commands, and raw outputs needed to assess a result.
 
-**Key Topics:**
-- DFF behavior with constant inputs
-- Constant propagation in synthesis
-- Logic optimization and redundancy elimination
-- Boolean algebra simplification
-- Counter design and applications
-- Synthesis tool optimization levels
+## Day-by-day materials
 
-**Files:** `deff_const2_gtk.png`, `deff_const2_yosys.png`, `deff_const3_gtk.png`, `dff_const3_yosys.png`, `dff_const_gtk.png`, `dff_const_yosys.png`, `good_counter.png`, `opt_check.png`, `opt_check2.png`, `opt_check3.png`
+| Folder | Topics/evidence | Guide |
+| --- | --- | --- |
+| DAY_1 | 2:1 multiplexer screenshots | [DAY_1 README](./DAY_1/README.md) |
+| DAY_2 | DFF/reset and hierarchy-related screenshots | [DAY_2 README](./DAY_2/README.md) |
+| DAY_3 | Constant-input DFF, counter, and Yosys optimization screenshots | [DAY_3 README](./DAY_3/README.md) |
+| DAY_4 | Blocking/non-blocking examples and MUX screenshots | [DAY_4 README](./DAY_4/README.md) |
+| DAY_5 | Case/if completeness, generated logic, and RCA screenshots | [DAY_5 README](./DAY_5/README.md) |
+| DAY_6 | Pre- and post-synthesis BabySoC waveform screenshots | [DAY_6 README](./DAY_6/README.md) |
+| DAY_7 | Sequence-detector diagram, waveforms, and Yosys statistics screenshot | [DAY_7 README](./DAY_7/README.md) |
 
-**Skills Gained:**
-- Understanding constant propagation
-- Writing optimization-friendly code
-- Analyzing synthesis results
-- Designing efficient counters and state machines
-- Comparing before/after optimization metrics
+## Repository structure
 
----
+```text
+.
+├── DAY_1/ … DAY_7/                 Workshop evidence and day guides
+├── PD program/
+│   ├── module1/ … module5/         Physical-design module evidence/guides
+│   └── README.md                   Program index
+├── PostRoute_STA_VSDBabySOC_OpenRoad/
+│   ├── README.md                   BabySoC OpenROAD/STA evidence guide
+│   └── post_route_sta_16_corners.pdf
+└── README.md                       Repository entry point
+```
 
-### [DAY 4: Blocking vs Non-Blocking & Advanced Multiplexers](./DAY_4/README.md)
-**Focus:** Critical assignment semantics and advanced MUX designs
+## Physical-design program
 
-**Key Topics:**
-- Blocking (`=`) vs Non-Blocking (`<=`) assignments
-- Why non-blocking is essential for sequential logic
-- Simulation vs synthesis mismatches
-- Advanced multiplexer implementations
-- Ternary operator and case-based multiplexers
-- Design verification and waveform analysis
+[`PD program/README.md`](./PD%20program/README.md) is the index to the module guides:
 
-**Files:** `bad_mux_gtk.png`, `bad_mux_yosys.png`, `blocking_caveat_gtk.png`, `blocking_caveat_yosys.png`, `ternary_operator_mux_rtl.png`, `ternary_operator_mux_yoys_rtl.png`
+1. [Module 1 — environment and synthesis screenshots](./PD%20program/module1/README.md)
+2. [Module 2 — floorplan and placement screenshots](./PD%20program/module2/README.md)
+3. [Module 3 — CMOS inverter and ngspice-related screenshots](./PD%20program/module3/README.md)
+4. [Module 4 — configuration, libraries, tracks, and synthesis screenshots](./PD%20program/module4/README.md)
+5. [Module 5 — CTS, placement, and routing screenshots](./PD%20program/module5/README.md)
 
-**Skills Gained:**
-- Mastering assignment semantics
-- Avoiding simulation-synthesis mismatches
-- Writing race-condition-free code
-- Designing efficient multiplexers
-- Debugging timing issues
+The modules contain image artifacts, not the actual designs, TCL configuration, constraints, scripts, logs, or generated layout databases. Refer to each guide for the exact evidence available and the limitations on reproducing or validating the flow.
 
----
+### Physical-design stage context
 
-### [DAY 5: Case Statements, Completeness & Design Control Flow](./DAY_5/README.md)
-**Focus:** Advanced control structures and design completeness
+The stages represented in the PD material fit into a typical implementation sequence:
 
-**Key Topics:**
-- Case statement syntax and semantics
-- Complete vs incomplete designs
-- Latch inference from incomplete assignments
-- Generate blocks for parameterized designs
-- Demultiplexers and decoders
-- State machines and control flow
-- Gate-level simulation (GLS) vs behavioral simulation
+1. **Environment and synthesis:** select technology libraries, read RTL, and produce a logic netlist.
+2. **Floorplanning:** establish the die/core region, I/O arrangement, macro locations, and physical constraints.
+3. **Placement:** assign standard cells to legal sites and assess timing and congestion.
+4. **Clock-tree synthesis:** construct a clock distribution network and evaluate skew and insertion delay.
+5. **Routing:** connect placed cells using technology routing layers, then run relevant checks.
+6. **Static timing analysis:** evaluate constrained timing paths for specified modes and corners.
 
-**Files:** `bad_case_gls.png`, `bad_case_gtk.png`, `bad_case_yosys.png`, `comp_case_yosys.png`, `demux_case_gtk.png`, `demux_generate_gtk.png`, `incomp_case_gtk.png`, `incomp_case_yosys.png`, `incomp_if.v_gtk.png`, `incomp_if2_gtk.png`, `incomp_if2_yosys.png`, `incomp_if_yosys.png`, `mux_generate_gtk.png`, `mux_generate_yosys.png`, `partial_case_assign_yosys.png`, `rca.v_gtk.png`
+This is general flow context, not a claim that each stage completed in every screenshot. The PD program examples and the BabySoC implementation evidence are documented separately.
 
-**Skills Gained:**
-- Writing complete, latch-free designs
-- Using generate blocks effectively
-- Implementing state machines
-- Detecting unintended synthesis artifacts
-- Performing comprehensive design verification
+## BabySoC simulation evidence
 
----
+[`DAY_6`](./DAY_6/README.md) contains two GTKWave screenshots labeled pre-synthesis and post-synthesis. Signal labels include `CLK`, `OUT`, `RV_TO_DAC[9:0]`, and control/reference signals. These screenshots provide visual waveform evidence; there is no HDL/testbench source, VCD, or comparison log with which to verify equivalence or explain the stimulus.
 
-## 🛠️ Essential Tools & Commands
+## BabySoC physical-design evidence
 
-### HDL Simulation
-**Icarus Verilog** - Open-source Verilog compiler and simulator
+The [post-route guide](./PostRoute_STA_VSDBabySOC_OpenRoad/README.md) documents the available OpenROAD GUI screenshots and [`post_route_sta_16_corners.pdf`](./PostRoute_STA_VSDBabySOC_OpenRoad/post_route_sta_16_corners.pdf). The images are labeled as floorplan, placement, CTS, and routing views. Their presence records flow progress, but does not by itself prove that every stage completed successfully or that timing/signoff criteria were met. Review the PDF's corner-by-corner details and constraints before making a timing-closure claim.
+
+The PLL floorplan screenshot displays **17 unconstrained pins**. This means the timing context requires review: paths at unconstrained endpoints cannot be assessed as though they had been checked against valid timing requirements. The PDF is named for 16 corners, but the actual corner results and closure status should be read from the PDF rather than inferred from its filename.
+
+## RTL review and reproducibility
+
+### Review checklist for RTL exercises
+
+- Confirm the intended function and write down the truth table or state-transition behavior before interpreting a waveform.
+- Check reset polarity, assertion/deassertion behavior, and clock edge for sequential logic.
+- Use non-blocking assignments for clocked state and complete assignments for combinational outputs.
+- Exercise boundary and exceptional cases, not only a representative waveform.
+- Review synthesis warnings and inferred latches/registers rather than judging the implementation from RTL appearance.
+- For RTL-versus-GLS comparison, use consistent stimulus and account for gate delays and initialization semantics.
+
+### Generic tool flow
+
+The examples below show a typical workflow, **not commands that can currently be run from this repository**. There are no design sources, testbenches, or VCD files checked in. Replace filenames and top-module names with the files from the design being evaluated.
+
 ```bash
-# Compile Verilog design and testbench
-iverilog -o output_file design.v testbench.v
+# Compile RTL and a testbench with Icarus Verilog
+iverilog -g2012 -o sim.out design.v tb_design.v
 
-# Run simulation and generate waveform dump
-vvp output_file
+# Run the simulation; the testbench must include a waveform dump if one is needed
+vvp sim.out
 
-# View waveforms in GTKWave
+# Open the VCD file produced by the testbench
 gtkwave dump.vcd
 ```
 
-### Waveform Viewer
-**GTKWave** - Visual waveform analyzer for simulation results
+A generic Yosys structural check can be run after adapting the input and top name:
+
 ```bash
-# Open waveform file
-gtkwave simulation.vcd
+yosys -p "read_verilog design.v; hierarchy -top top; proc; opt; check; stat"
 ```
 
-### Hardware Synthesis
-**Yosys** - Open-source synthesis tool
-```bash
-# Basic synthesis
-yosys -p "read_verilog design.v; synth_ice40 -json netlist.json"
+Technology mapping and physical-design flows require the appropriate target libraries, constraints, PDK, and flow setup; this generic command does not produce a signoff implementation.
 
-# Synthesis with optimization
-yosys -p "read_verilog design.v; opt -full; synth_ice40"
+### Suggested evidence package
 
-# View synthesis result
-yosys -p "read_verilog design.v; synth_ice40; show"
+For an academic evaluation that expects results to be reproducible, supplement the screenshots with:
 
-# Generate statistics and reports
-yosys -p "read_verilog design.v; synth_ice40; stat"
-```
+1. RTL and testbench source, including the top module and interface description.
+2. Simulator/synthesis/physical-design tool versions and exact commands or scripts.
+3. Raw waveform, synthesis logs/netlists, and relevant physical-design reports.
+4. Timing constraints, library/PDK version, and the mode/corners used for analysis.
+5. A concise result summary that identifies measured values and links each claim to its report.
 
-### Flow: From RTL to Gate-Level
-```bash
-# 1. Run behavioral simulation
-iverilog -o rtl_sim design.v tb.v
-vvp rtl_sim
-gtkwave rtl_simulation.vcd
+Do not include credentials or unrelated personal files in the submission.
 
-# 2. Synthesize to gate-level
-yosys -p "read_verilog design.v; synth_ice40 -json netlist.json; show"
+## Selected evidence
 
-# 3. Run gate-level simulation (GLS)
-iverilog -o gls_sim netlist.v tb.v
-vvp gls_sim
-gtkwave gls_simulation.vcd
+### Sequence-detector logic view
 
-# 4. Compare results
-# (manually compare waveforms for timing/logic correctness)
-```
+The synthesis graph screenshot shows the logic and state elements associated with a design labeled `sequence_detector`.
 
-## 📋 Key Design Patterns Quick Reference
+![Yosys logic graph for the sequence-detector example](./DAY_7/sequence_detector_block_diagram.png)
+*Figure 1. Synthesis logic graph labeled `sequence_detector`.*
 
-### Combinatorial MUX
-```verilog
-// Ternary operator (preferred)
-assign y = (sel) ? a : b;
+### BabySoC waveform
 
-// Always block
-always @(*)
-  y = (sel) ? a : b;
+This GTKWave screenshot is labeled as a pre-synthesis simulation and displays BabySoC-related signal names.
 
-// Case statement
-always @(*)
-  case(sel)
-    1'b0: y = a;
-    1'b1: y = b;
-    default: y = 'x;
-  endcase
-```
+![Pre-synthesis BabySoC waveform screenshot](./DAY_6/pre_synth%20waveform.png)
+*Figure 2. Pre-synthesis GTKWave view of the BabySoC testbench signals.*
 
-### Sequential Logic (DFF)
-```verilog
-// Non-blocking assignment (REQUIRED)
-always @(posedge clk or negedge reset_n)
-  if (~reset_n)
-    q <= 1'b0;  // Asynchronous reset
-  else
-    q <= d;     // Store input on clock edge
-```
+### OpenROAD placement view
 
-### Complete Case Statement
-```verilog
-always @(*)
-  case(sel)
-    2'b00: y = a;
-    2'b01: y = b;
-    2'b10: y = c;
-    2'b11: y = d;
-    default: y = 'x;  // Always include default
-  endcase
-```
+The image shows a placement-stage GUI view for `vsdbabysoc`; the screenshot is visual evidence only.
 
-### Parameterized Design with Generate
-```verilog
-parameter WIDTH = 8;
+![OpenROAD placement view for the BabySoC design](./PostRoute_STA_VSDBabySOC_OpenRoad/Placement_successful.png)
+*Figure 3. OpenROAD placement-stage GUI view; the image alone does not establish placement signoff.*
 
-genvar i;
-generate
-  for (i = 0; i < WIDTH; i = i + 1) begin : LOOP
-    assign out[i] = in[i] & enable;
-  end
-endgenerate
-```
+## Learning summary
 
-## ✅ Best Practices Summary
+The collected screenshots support review of RTL simulation waveforms, synthesis representations, and physical-design GUI stages. A key evaluation caveat is that screenshots alone cannot establish design correctness, run reproducibility, timing closure, or physical signoff. Those conclusions require the corresponding source, constraints, tool outputs, and verified report data.
 
-### Assignment Semantics
-- ✓ Use **blocking assignment (`=`)** in combinatorial logic (`always @(*)`)
-- ✓ Use **non-blocking assignment (`<=`)** in sequential logic (`always @(posedge clk)`)
-- ✓ Use **`assign`** for simple combinatorial expressions
-- ✓ Never mix blocking and non-blocking in the same block
+### Technical terms
 
-### Control Flow
-- ✓ Always include **default clause** in case statements
-- ✓ Ensure **all conditional paths** assign all outputs (prevent latches)
-- ✓ Use **generate blocks** for parameterized, scalable designs
-- ✓ Keep designs **simple and readable**
+- **RTL:** a hardware description of registers and the logic between them.
+- **Synthesis:** transformation of RTL into a logic netlist using selected libraries and constraints.
+- **CTS:** clock-tree synthesis, which constructs the clock distribution network.
+- **STA:** static timing analysis, which checks timing paths against constraints without applying simulation vectors.
+- **GLS:** gate-level simulation of a synthesized netlist; useful comparisons require consistent testbench stimulus and appropriate models.
+- **PDK:** process design kit containing technology-specific data and models used by implementation tools.
 
-### Design Quality
-- ✓ **Simulate** before synthesizing (catch logic errors early)
-- ✓ **Analyze waveforms** to verify correctness
-- ✓ **Compare RTL and GLS** simulations (catch synthesis artifacts)
-- ✓ **Check synthesis reports** for inferred latches and timing
-- ✓ **Use constraints** to specify clock frequency and paths
-- ✓ **Test edge cases** and corner conditions
+## Academic review notes
 
-### Naming & Documentation
-- ✓ Use **clear, descriptive names** for signals and modules
-- ✓ Follow **consistent naming conventions** (e.g., `_n` for active-low)
-- ✓ Document **module interfaces** with comments
-- ✓ Add comments for **non-obvious logic**
-- ✓ Maintain **consistent indentation**
+The day folders and PD modules are useful as a visual learning record. To assess them as engineering results, an evaluator should distinguish three kinds of evidence:
 
----
+1. **Concept evidence:** diagrams and screenshots that illustrate a topic.
+2. **Functional evidence:** source, testbench, expected results, and repeatable simulation showing behavior.
+3. **Implementation/signoff evidence:** constraints, flow logs, mapped/routed outputs, and reports showing timing and physical checks.
 
-## 🔄 Recommended Learning Flow
+This repository currently emphasizes concept evidence. The post-route STA PDF is an additional report artifact, but its results and constraint coverage must be checked directly. The README descriptions intentionally do not claim functional pass, timing closure, or signoff when supporting source/reports are absent.
 
-1. **Start with DAY 1** to understand combinatorial logic and basic MUX design
-2. **Progress to DAY 2** to learn sequential elements and module hierarchy
-3. **Continue to DAY 3** for optimization and efficient design patterns
-4. **Study DAY 4** to master assignment semantics (critical concept!)
-5. **Finish with DAY 5** for advanced control structures and complete designs
+## References and acknowledgement
 
-**Recommended Approach:**
-- Read through each day's README for conceptual understanding
-- Examine the provided waveform images (`.png` files) to visualize behavior
-- Recreate the designs using the commands provided
-- Write testbenches to verify behavior
-- Compare behavioral and synthesis results
-- Modify examples to deepen understanding
+The repository identifies the work as an RTL Design Workshop and includes VSD BabySoC labels in its artifacts. No external references, source attribution details, tool versions, or license terms are included in the checked-in files; none are inferred here.
 
----
+## Conclusion
 
-## 🎯 Common Pitfalls to Avoid
-
-| Pitfall | Consequence | Solution |
-|---------|-------------|----------|
-| Using blocking in sequential blocks | Simulation-synthesis mismatch | Use non-blocking `<=` |
-| Incomplete case statements | Unintended latches inferred | Add default clause |
-| Missing else in if-else chain | Latches for undefined cases | Complete all branches |
-| Mixing blocking and non-blocking | Race conditions | Keep one pattern per block |
-| Not verifying with testbench | Undetected errors | Always write and run tests |
-| Only running behavioral simulation | Synthesis artifacts missed | Also run GLS |
-| Ignoring synthesis reports | Optimization issues unknown | Review Yosys reports |
-| Poor naming conventions | Code hard to understand/maintain | Use clear, consistent names |
-
----
-
-## 📊 Progression Summary
-
-```
-DAY 1: Basic MUX
-    ↓
-DAY 2: Add Sequential Logic (DFFs)
-    ↓
-DAY 3: Optimize & Refine
-    ↓
-DAY 4: Master Assignment Semantics
-    ↓
-DAY 5: Advanced Control & Completeness
-    ↓
-✓ Complete RTL Design Foundation
-```
-
----
-
-## 🚀 Next Steps After Workshop
-
-After completing this workshop, you'll be ready to:
-- Design small to medium-sized digital circuits
-- Work with FPGA design flows
-- Understand ASIC design fundamentals
-- Read and review others' RTL code
-- Optimize designs for area, power, and timing
-
-**Advanced Topics to Explore:**
-- Clock domain crossing (CDC)
-- Formal verification
-- Timing analysis and constraints
-- Low-power design techniques
-- High-level synthesis (HLS)
-- Advanced state machines
-
----
-
-## 📞 Getting Help
-
-For each topic:
-1. Read the day's README file thoroughly
-2. Review the provided waveform images
-3. Run the suggested commands
-4. Experiment with design variations
-5. Check synthesis reports and waveforms
-6. Consult Verilog language references if needed
-
----
-
-## 📄 File Structure
-
-```
-RTL_Design_Workshop/
-├── README.md (this file)
-├── DAY_1/
-│   ├── README.md (DAY 1 guide)
-│   ├── good_mux_both.png
-│   └── good_mux_gtk.png
-├── DAY_2/
-│   ├── README.md (DAY 2 guide)
-│   ├── asynchronous.png
-│   ├── dff_asy_gtk.png
-│   └── ... (other files)
-├── DAY_3/
-│   ├── README.md (DAY 3 guide)
-│   └── ... (optimization examples)
-├── DAY_4/
-│   ├── README.md (DAY 4 guide)
-│   └── ... (assignment and MUX examples)
-└── DAY_5/
-    ├── README.md (DAY 5 guide)
-    └── ... (case statements and completeness examples)
-```
-
----
-
-## 📖 Verilog Resources
-
-- **IEEE 1364** - Verilog standard
-- **Open-source tools**: Icarus Verilog, Yosys, GTKWave (all free!)
-- **Online simulators**: EDA Playground (for quick testing)
-- **Books**: "Verilog HDL" by Samir Palnitkar, "RTL Modeling with Verilog" by Cummings
-
----
-
-## 🎓 Learning Outcomes
-
-Upon completing this workshop, you will be able to:
-
-✓ Design and verify combinatorial logic circuits  
-✓ Implement sequential logic with proper synchronization  
-✓ Write synthesizable, race-condition-free RTL code  
-✓ Use simulation and synthesis tools effectively  
-✓ Analyze and optimize digital designs  
-✓ Understand simulation-synthesis relationships  
-✓ Create parameterized, reusable components  
-✓ Verify designs with comprehensive testbenches  
-✓ Interpret synthesis reports and waveforms  
-✓ Follow industry-standard design practices  
-
----
-
-## 📝 License & Attribution
-
-This workshop is designed for educational purposes. All tools used (Icarus Verilog, Yosys, GTKWave) are open-source and freely available.
-
----
-
-**Happy Learning! Begin with [DAY 1: MUX Design Fundamentals](./DAY_1/README.md)** 🎯
+This repository is a visual record of workshop topics and BabySoC implementation stages. The linked guides describe what is actually present and make the missing inputs explicit so an evaluator can distinguish documented evidence from claims that would require additional files.

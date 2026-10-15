@@ -1,135 +1,51 @@
-# PD Program
+# Physical-design program evidence
 
-This PD Program is a practical learning path focused on ASIC design flow using OpenLane, SkyWater 130nm PDK, and related EDA tools. It introduces the complete digital design flow from environment setup through synthesis, floorplanning, placement, clock tree synthesis, and routing.
+## Overview
 
-## Program Objective
+This folder organizes five physical-design learning modules. Its contents are screenshots only: no RTL, SPICE decks, TCL scripts, constraints, tool logs, generated netlists, or layout databases are included. The images indicate topics and GUI/tool activity; they are not a substitute for reproducible inputs or complete reports.
 
-The goal of this program is to help learners understand how a digital design moves from HDL and configuration files to a manufacturable physical implementation. Each module builds on the previous one and focuses on a key step in the ASIC design lifecycle.
+## Module index
 
-## Modules Overview
+| Module | Subject suggested by available artifacts | Guide |
+| --- | --- | --- |
+| 1 | OpenLane/PDK environment, configuration, and synthesis views | [Module 1](./module1/README.md) |
+| 2 | Floorplan, I/O placement, and layout/placement views | [Module 2](./module2/README.md) |
+| 3 | SkyWater 130 nm CMOS inverter, Magic, and ngspice-related views | [Module 3](./module3/README.md) |
+| 4 | Synthesis/configuration, library-corner, track, and placement views | [Module 4](./module4/README.md) |
+| 5 | CTS, placement, and routing screenshots | [Module 5](./module5/README.md) |
 
-### Module 1: OpenLane Setup and Design Environment
-Focus: Setting up the toolchain, understanding PDKs, and starting the OpenLane workflow.
+The topics above are inferred from artifact names and visible screenshot context. There are no actual program scripts or input/output directories here from which to document commands or claim a complete run.
 
-Topics covered:
-- OpenLane installation and environment setup
-- SkyWater 130nm PDK integration
-- Design directory structure and configuration files
-- Initial synthesis and design exploration
-- Project understanding with example RTL blocks
+## How the modules fit together
 
-Key files:
-- `config.tcl_2.png`
-- `openlane.png`
-- `synthesis.png`
-- `synthesis_results.png`
+The ordering provides a conceptual route from environment and synthesis context (Module 1), through floorplanning and placement (Module 2), circuit-level CMOS behavior (Module 3), library/constraint concepts (Module 4), and clocking/routing stages (Module 5). Module 3 is a transistor-level exercise, not necessarily another sequential backend stage in one implementation run. The repository does not establish that all modules use the same design, PDK revision, or tool setup.
 
----
+## Inputs and outputs for a reproducible review
 
-### Module 2: Floorplanning and Placement
-Focus: Defining chip boundaries, creating placement constraints, and understanding physical layout decisions.
+| Activity | Typical inputs | Useful review outputs |
+| --- | --- | --- |
+| RTL synthesis | RTL, top module, libraries, flow configuration | Synthesis log, netlist, warnings, cell statistics |
+| Floorplan and placement | Netlist, floorplan/I/O constraints, technology LEF | Layout database, legality and congestion reports |
+| CMOS simulation | SPICE deck, device models, supply, stimulus | Transient log and waveform/measurement results |
+| Timing/corner review | Timing constraints, libraries, operating conditions | Setup/hold reports and unconstrained-path report |
+| CTS and routing | Placed design, clock constraints, routing technology data | CTS metrics, routed database, DRC and timing reports |
 
-Topics covered:
-- Floorplan setup and constraints
-- Core area and I/O planning
-- Placement strategy and placement quality checks
-- Viewing floorplan and placement results
-- Reading layout logs and understanding key metrics
+This table describes material normally needed for review; these inputs and outputs are not all checked into this repository.
 
-Key files:
-- `floorplan.png`
-- `floorplan_results_def.png`
-- `layout.png`
-- `placement.png`
+## Representative module evidence
 
----
+![Floorplan screenshot from Module 2](./module2/floorplan.png)
+*Module 2 floorplan screenshot.*
 
-### Module 3: CMOS Design and Simulation using ngspice
-Focus: Understanding transistor-level behavior and analog/digital interaction in the SkyWater flow.
+![ngspice simulation screenshot from Module 3](./module3/ngspice_simulation_op.png)
+*Module 3 screenshot associated with ngspice simulation output.*
 
-Topics covered:
-- CMOS inverter design
-- PDK-based circuit simulation
-- ngspice workflow and waveform interpretation
-- Device behavior under transient analysis
-- Design verification at circuit level
+## Tools and technologies represented
 
-Key files:
-- `Inverter_sky130A_3.png`
-- `Cmosinverter_tcon_3.png`
-- `ngspice_1_output_3.png`
-- `ngspice_simulation_op.png`
+The material names or visibly references OpenLane, OpenROAD, SkyWater `sky130A`, Magic, ngspice, and Yosys. Tool versions, installation details, PDK revision, design configuration, and exact commands are not recorded in the repository.
 
----
+## Interpreting the evidence
 
-### Module 4: Synthesis and Timing Corner Analysis
-Focus: Converting RTL to gates and evaluating the design across process corners.
+The five guides select representative screenshots and describe only what they are associated with. A screenshot labeled for a stage does not establish that the stage completed, passed design-rule checks, met timing, or produced a manufacturable layout. Those conclusions need the complete logs, constraints, reports, and generated design files.
 
-Topics covered:
-- Synthesis flow in OpenLane
-- Corner-based analysis with sky130 libraries
-- Timing characteristics and variation across PVT conditions
-- Exploring synthesis output and design quality
-- Checking library variants and constraints
-
-Key files:
-- `sky130_fast_4.png`
-- `sky130_inv_4.png`
-- `sky130_typical_4.png`
-- `sky140_slow_4.png`
-- `Synthesis_4.png`
-
----
-
-### Module 5: Clock Tree Synthesis, Placement, and Routing
-Focus: Completing the backend flow and understanding the final implementation steps.
-
-Topics covered:
-- Clock tree synthesis (CTS)
-- Placement refinement
-- Routing and congestion handling
-- Design signoff checks
-- Final backend implementation flow
-
-Key files:
-- `run_cts_5.png`
-- `Run_placement_5.png`
-- `Run_routing_5.png`
-
----
-
-## Tools Used
-
-- OpenLane
-- SkyWater PDK (sky130A)
-- Magic
-- ngspice
-- TCL configuration files
-- Linux/Unix shell workflow
-
-## Typical Design Flow
-
-1. Configure the design and setup the PDK
-2. Run synthesis and review reports
-3. Floorplan the chip and define placement constraints
-4. Perform placement and optimization
-5. Run CTS for clock distribution
-6. Execute routing and verify the final layout
-7. Inspect reports, logs, and generated outputs
-
-## Learning Outcome
-
-By the end of this program, learners should be able to:
-- Set up a digital ASIC design environment
-- Understand key OpenLane and Sky130 workflows
-- Interpret floorplan, placement, and routing results
-- Simulate and analyze transistor-level circuits
-- Understand the physical design pipeline from synthesis to layout
-
-## Suggested Progression
-
-Start with Module 1 and move through the modules in order. Each module introduces a core stage in the ASIC implementation flow and is designed to build practical understanding of real backend design tasks.
-
----
-
-This PD Program is intended as a hands-on introduction to physical design and ASIC implementation fundamentals.
+[Workshop index](../README.md) · [BabySoC post-route evidence](../PostRoute_STA_VSDBabySOC_OpenRoad/README.md)
