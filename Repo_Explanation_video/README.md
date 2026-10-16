@@ -9,4 +9,3 @@ This video provides a walkthrough of the RTL-to-GDSII design flow completed duri
 [Click here to watch the RTL-GDSII project explanation video on Google Drive]
 (https://drive.google.com/file/d/1K8wClXr8CQ4pz9rkiacTIyvMtjT7pj5r/view?usp=drivesdk)
 
-**Note:** Ensure the Google Drive sharing permission is set to "Anyone with the link" as a viewer.
